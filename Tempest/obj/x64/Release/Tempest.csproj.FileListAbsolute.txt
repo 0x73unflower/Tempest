@@ -1,0 +1,5 @@
+C:\Tools\Bypasses\Tempest\Tempest\bin\x64\Release\Tempest.exe.config
+C:\Tools\Bypasses\Tempest\Tempest\bin\x64\Release\Tempest.exe
+C:\Tools\Bypasses\Tempest\Tempest\obj\x64\Release\Tempest.csproj.AssemblyReference.cache
+C:\Tools\Bypasses\Tempest\Tempest\obj\x64\Release\Tempest.csproj.CoreCompileInputs.cache
+C:\Tools\Bypasses\Tempest\Tempest\obj\x64\Release\Tempest.exe
