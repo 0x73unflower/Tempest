@@ -19,7 +19,7 @@ Usage:
 Example Usage:
 
         Using Standard Security (Username + Password)
-        .\Tempest -s 'dc01.corp1.com' -d 'master' -u 'dave' -p 'letmein123!' -q 'SELECT SYSTEM_USER;'
+        .\Tempest -s 'dc01.corp1.com' -d 'master' -u 'sa' -p 'letmein123!' -q 'SELECT SYSTEM_USER;'
 
         Using Trusted Connection (Kerberos Authentication)
         .\Tempest -s 'dc01.corp1.com' -d 'master' -q 'SELECT SYSTEM_USER;'
