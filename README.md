@@ -16,6 +16,7 @@ Usage:
         -p | Specify the password of the user authenticating as
         -q | Specify the query to execute against the server
         -p | Check for privilege escalation vectors. Possible options: 'impersonation'
+        -c | Execute a system command. Requires: '-i <USER TO EXEC AS>' and '-m <EXEC METHOD>' ('ole', 'xp_cmdshell') flags set
 
 Example Usage:
 
@@ -25,6 +26,9 @@ Example Usage:
         Using Trusted Connection (Kerberos Authentication)
         .\Tempest -s 'dc01.corp1.com' -d 'master' -q 'SELECT SYSTEM_USER;'
 
-        Check for Privilege Escalation]
+        Executing a system command
+        .\Tempest -s 'dc01.corp1.com' -i 'sa' -m 'xp_cmdshell' -c 'whoami'
+
+        Check for privilege escalation vectors
         .\Tempest -s 'dc01.corp1.com' -d 'master' -p 'impersonation'
 ```
