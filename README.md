@@ -15,6 +15,7 @@ Usage:
         -u | Specify the user to authenticate as
         -p | Specify the password of the user authenticating as
         -q | Specify the query to execute against the server
+        -p | Check for privilege escalation vectors. Possible options: 'impersonation'
 
 Example Usage:
 
@@ -23,4 +24,7 @@ Example Usage:
 
         Using Trusted Connection (Kerberos Authentication)
         .\Tempest -s 'dc01.corp1.com' -d 'master' -q 'SELECT SYSTEM_USER;'
+
+        Check for Privilege Escalation]
+        .\Tempest -s 'dc01.corp1.com' -d 'master' -p 'impersonation'
 ```
