@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Tempest {
@@ -10,22 +11,80 @@ namespace Tempest {
                         "-d | Specify the database e.g. 'master' (used by default)\n\t" +
                         "-u | Specify the user to authenticate as\n\t" +
                         "-p | Specify the password of the user authenticating as\n\t" +
-                        "-q | Specify the query to execute against the server\n\n" +
+                        "-q | Specify the query to execute against the server\n\t" +
+                        "-p | Check for privilege escalation vectors. Possible options: 'impersonation'\n\n" +
                         "Example Usage:\n\n" +
                         "\tUsing Standard Security (Username + Password)\n\t.\\Tempest -s 'dc01.corp1.com' -d 'master' -u 'sa' -p 'letmein123!' -q 'SELECT SYSTEM_USER;'\n\n" +
-                        "\tUsing Trusted Connection (Kerberos Authentication)\n\t.\\Tempest -s 'dc01.corp1.com' -d 'master' -q 'SELECT SYSTEM_USER;'\n");
+                        "\tUsing Trusted Connection (Kerberos Authentication)\n\t.\\Tempest -s 'dc01.corp1.com' -d 'master' -q 'SELECT SYSTEM_USER;'\n\n" +
+                        "\t.Check for Privilege Escalation\n\t.\\Tempest -s 'dc01.corp1.com' -d 'master' -p 'impersonation'\n");
             Environment.Exit(0);
         }
-        static void execQuery(string sqlQuery, SqlConnection con) {
-            try {
+
+        static void privEscCheck(string typeOfPriv, SqlConnection con)
+        {
+            try
+            {
+                if (typeOfPriv == "impersonation")
+                {
+                    List<string> impersonatableUsers = new List<string>();
+                    string sqlQuery = "SELECT distinct b.name FROM sys.server_permissions a INNER JOIN sys.server_principals b ON a.grantor_principal_id = b.principal_id WHERE a.permission_name = 'IMPERSONATE'";
+                    SqlCommand command = new SqlCommand(sqlQuery, con);
+                    SqlDataReader exec = command.ExecuteReader();
+                    if (exec.HasRows)
+                    {
+                        while (exec.Read())
+                        {
+                            impersonatableUsers.Add(exec[0].ToString());
+                        }
+                    } else
+                    {
+                        Console.WriteLine("[-] No Users Found to Impersonate. Exiting.");
+                        Environment.Exit(0);
+                    }
+                    exec.Close();
+                    string[] foundUserList = impersonatableUsers.ToArray();
+                    foreach (string user in foundUserList)
+                    {
+                        string checkAsUser = "EXECUTE AS LOGIN = " + user + ";";
+                        SqlCommand checkAsUserCommand = new SqlCommand(sqlQuery, con);
+                        SqlDataReader execAsUser = command.ExecuteReader();
+                        execAsUser.Read();
+                        if (execAsUser[0].ToString() != "")
+                        {
+                            Console.WriteLine("[*] Found User: " + execAsUser[0]);
+                            Console.WriteLine("      |--- Allows Impersonation: TRUE");
+                        }
+                        execAsUser.Close();
+                    }
+                    Environment.Exit(0);
+                } else
+                {
+                    Console.WriteLine("[!] Error: '" + typeOfPriv + "' CHECK DOES NOT EXIST!");
+                    Environment.Exit(0);
+                }
+            }
+            catch (SqlException)
+            {
+                Console.WriteLine("[-] Error. Check your syntax");
+                Environment.Exit(0);
+            }
+        }
+
+        static void execQuery(string sqlQuery, SqlConnection con)
+        {
+            try
+            {
                 SqlCommand command = new SqlCommand(sqlQuery, con);
                 SqlDataReader exec = command.ExecuteReader();
-                exec.Read();
-                Console.WriteLine("[+] Query Output: \n" + exec[0]);
+                Console.WriteLine("[+] Query Output:");
+                while (exec.Read()) 
+                {
+                    Console.WriteLine(exec[0]);
+                }
                 exec.Close();
-            }
-            catch {
-                Console.WriteLine("[!] Error: Failed to execute query");
+            } catch
+            {
+                Environment.Exit(0);
             }
         }
 
@@ -67,13 +126,14 @@ namespace Tempest {
 
         static void Main(string[] args) {
             string sqlServer = "";
-            string database = "";
+            string database = "master";
             string sqlUser = "";
             string sqlPass = "";
             string sqlQuery = "";
+            string typeOfPriv = "";
 
             for (int i = 0; i < args.Length; i++) {
-                if (args[i] == "-h") {
+                if (args[i] == "-h" || args.Length == 0) {
                     printHelp();
                 }
                 // Get the server
@@ -95,6 +155,10 @@ namespace Tempest {
                 if (args[i] == "-q") {
                     sqlQuery = args[i + 1];
                 }
+                if (args[i] == "-p")
+                {
+                    typeOfPriv = args[i + 1];
+                }
             }
 
             // Connect to the database
@@ -103,6 +167,11 @@ namespace Tempest {
             // Execute a query against the server
             if (sqlQuery != "") {
                 execQuery(sqlQuery, con);
+            }
+
+            if (typeOfPriv != "")
+            {
+                privEscCheck(typeOfPriv, con);
             }
 
             con.Close();

@@ -3,3 +3,8 @@ C:\Tools\Bypasses\Tempest\Tempest\bin\x64\Release\Tempest.exe
 C:\Tools\Bypasses\Tempest\Tempest\obj\x64\Release\Tempest.csproj.AssemblyReference.cache
 C:\Tools\Bypasses\Tempest\Tempest\obj\x64\Release\Tempest.csproj.CoreCompileInputs.cache
 C:\Tools\Bypasses\Tempest\Tempest\obj\x64\Release\Tempest.exe
+C:\Users\sunflower\Source\Repos\Tempest\Tempest\bin\x64\Release\Tempest.exe.config
+C:\Users\sunflower\Source\Repos\Tempest\Tempest\bin\x64\Release\Tempest.exe
+C:\Users\sunflower\Source\Repos\Tempest\Tempest\obj\x64\Release\Tempest.csproj.AssemblyReference.cache
+C:\Users\sunflower\Source\Repos\Tempest\Tempest\obj\x64\Release\Tempest.csproj.CoreCompileInputs.cache
+C:\Users\sunflower\Source\Repos\Tempest\Tempest\obj\x64\Release\Tempest.exe
