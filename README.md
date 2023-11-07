@@ -1,6 +1,6 @@
 # Tempest
 
-A basic C# tool to execute queries against an MSSQL instance.
+A basic C# tool to execute queries, perform code execution via *xp_cmdshell* or *OLE*, check for privilege escalation vectors, against an MSSQL instances.
 
 ## Usage
 
