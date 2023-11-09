@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Runtime.Remoting.Messaging;
 
 namespace Tempest {
     internal class Program {
@@ -161,12 +162,37 @@ namespace Tempest {
                 SqlCommand command = new SqlCommand(sqlQuery, con);
                 SqlDataReader exec = command.ExecuteReader();
                 Console.WriteLine("[+] Query Output:");
-                while (exec.Read()) 
+                //while (exec.Read()) 
+                //{
+                //    Console.WriteLine(exec[0]);
+                //}
+                //exec.Close();
+                //con.Close();
+                do
                 {
-                    Console.WriteLine(exec[0]);
+                    for (int i = 0; i < exec.FieldCount; i++)
+                    {
+                        Console.Write("\t" + exec.GetName(i));
+                        if (i == exec.FieldCount - 1)
+                        {
+                            Console.WriteLine("");
+                        }
+                    }
+                    while (exec.Read())
+                    {
+                        for (int x = 0; x < exec.FieldCount; x++)
+                        {
+                            Console.Write("\t" + exec.GetValue(x) + "\t");
+                            if (x == exec.FieldCount - 1)
+                            {
+                                Console.WriteLine("");
+                            }
+                        }
+                        //Console.WriteLine("\t{0}\t{1}\t{2}\t{3}\t{4}", exec.GetValue(0), exec.GetValue(1), exec.GetValue(2), exec.GetValue(3), exec.GetValue(4));
+                    }      
+
                 }
-                exec.Close();
-                con.Close();
+                while (exec.NextResult());
             } catch
             {
                 con.Close();
