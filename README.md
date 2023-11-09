@@ -23,14 +23,6 @@ Example Usage:
 
         Using Trusted Connection (Kerberos Authentication)
         .\Tempest -s 'dc01.corp1.com' -d 'master' -q 'SELECT SYSTEM_USER;'
-```
- Usage:
-
-        Using Standard Security (Username + Password)
-        .\Tempest -s 'dc01.corp1.com' -d 'master' -u 'sa' -p 'letmein123!' -q 'SELECT SYSTEM_USER;'
-
-        Using Trusted Connection (Kerberos Authentication)
-        .\Tempest -s 'dc01.corp1.com' -d 'master' -q 'SELECT SYSTEM_USER;'
 
         Executing a system command
         .\Tempest -s 'dc01.corp1.com' -i 'sa' -m 'xp_cmdshell' -c 'whoami'
